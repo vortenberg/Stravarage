@@ -1,0 +1,8 @@
+packages/
+bin/
+obj/
+Stravarage.v12.suo
+Stravarage/Stravarage.csproj.user
+Stravarage/tmp/*.xlsx
+.vs/config/applicationhost.config
+.vs/Stravarage/v14/.suo
