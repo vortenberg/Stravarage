@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Drawtest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Drawtest</h2>
+
+
+<canvas id="canvas1" width="300" height="225" style="border:1px dotted;"></canvas>
+<br />
+<canvas id="canvas2" width="500" height="375" style="border:1px dotted;"></canvas>
+
+<script type="text/javascript">
+
+    (function () {
+        myCanvas = function(selector)
+        {
+            var canvass = $(selector)[0];
+            var width = canvass.width;
+            var height = canvass.height;
+
+
+
+
+        }
+    })();
+
+
+    $(document).ready(
+        function()
+        {
+            var canvas1 = $("#canvas1")[0];
+
+            var context = canvas1.getContext("2d");
+
+            context.fillStyle = "#ff0000";
+            context.fillRect(0, 0, 100, 100);
+
+            context.strokeStyle = "#0000ff";
+            context.strokeRect(101, 101, 100, 100);
+            context.strokeText("Hello World", 0, 120);
+            context.clearRect(40, 40, 30, 30);
+            console.log("width: "+canvas1.width);
+
+
+
+            var canvas2 = $("#canvas2")[0];
+            var context2 = canvas2.getContext("2d");
+            context2.strokeStyle = "#eeeeee";
+
+            for(var x = 0.5;x<500;x+=10)
+            {
+                context2.moveTo(x, 0);
+                context2.lineTo(x, 375);
+            }
+            context2.stroke();
+
+            for (var y = 0.5; y < 375; y += 10) {
+                context2.moveTo(0,y);
+                context2.lineTo(500,y);
+            }
+            context2.stroke();
+
+
+        }
+        );
+
+</script>

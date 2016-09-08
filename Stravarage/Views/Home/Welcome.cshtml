@@ -1,0 +1,100 @@
+﻿@model Stravarage.Models.Athlete
+
+@{
+    ViewBag.Title = "Welcome";
+}
+
+<div id="div_api_requests" class="pull-right">
+    Strava Api Requests: <span class="label label-default" id="lbl_requests_last_15"></span>&nbsp;<span class="label label-default" id="lbl_requests_today"></span>
+</div>
+
+<h2>Welcome @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)!</h2>
+<strong>Id:</strong> @Html.DisplayFor(model => model.Id) <br />
+
+
+<strong>Starred Segments:</strong> @Html.DropDownListFor(model => model.StarredSegments,
+                                                            new SelectList(Model.StarredSegments, "Id", "Name"),
+                                                            " - select segment - ",
+                                                            new { id = "ddlStarredSegments" })
+<br />
+<strong>Your PR:</strong>   <img src="~/Images/waiting.gif" id="waitingGifPR" class="invisible" /><span id="lblPR"></span><br />
+<strong>Mean PR:</strong>   <img src="~/Images/waiting.gif" id="waitingGifAvg" class="invisible" /><span id="lblAvgPR"></span><br />
+<strong>Mode PR:</strong>   <img src="~/Images/waiting.gif" id="waitingGifMode" class="invisible" /><span id="lblModePR"></span><br />
+<strong>Std. Dev:</strong>  <img src="~/Images/waiting.gif" id="waitingGifStdDev" class="invisible" /><span id="lblStdDev"></span><br />
+<strong>KOM:</strong>        <img src="~/Images/waiting.gif" id="waitingGifKOM" class="invisible" /><span id="lblKOM"></span><br />
+<strong># Efforts:</strong>  <img src="~/Images/waiting.gif" id="waitingGifNumEfforts" class="invisible" /><span id="lblNumEfforts"></span><br />
+
+<canvas id="canvasPR" width="1200" height="500" style="border:1px dotted;"></canvas>
+
+<script type="text/javascript" src="~/Scripts/Stravarage/StravarageAPI.js"></script>
+<script type="text/javascript" src="~/Scripts/Stravarage/StatGraph.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(
+
+        function()
+        {
+            var proxy = new StravarageAPI()
+
+            $("#ddlStarredSegments").change(
+                function()
+                {
+                    $("#lblAvgPR").html("");
+                    $("#lblPR").html("");
+                    $("#lblStdDev").html("");
+                    $("#lblKOM").html("");
+                    $("#lblModePR").html("");
+                    $("#lblNumEfforts").html("");
+
+                    $("#waitingGifPR, #waitingGifAvg, #waitingGifStdDev, #waitingGifKOM, #waitingGifMode, #waitingGifNumEfforts").removeClass("invisible");
+
+
+                    var proxy = new StravarageAPI();
+
+                    proxy.getSegment($("#ddlStarredSegments").val(),
+                                        function (segment) {
+                                            proxy.getLeaderboard($("#ddlStarredSegments").val(),
+                                                                    function (segmentEfforts) {
+
+                                                                        var graph = new StatGraph(segment, segmentEfforts);
+
+                                                                        $("#waitingGifAvg, #waitingGifStdDev, #waitingGifKOM, #waitingGifPR, #waitingGifMode, #waitingGifNumEfforts").addClass("invisible");
+                                                                        $("#lblPR").html(graph.yourTime());
+                                                                        $("#lblAvgPR").html(graph.meanTime());
+                                                                        $("#lblStdDev").html(graph.standardDeviation());
+                                                                        $("#lblKOM").html(graph.minTime());
+                                                                        $("#lblModePR").html(graph.modeTime());
+                                                                        $("#lblNumEfforts").html(graph.numEfforts());
+
+                                                                    })
+                                        });
+
+                }
+            )
+
+            setInterval(function () {
+                proxy.getRequestCount(function (data) {
+                    $('#lbl_requests_last_15').text(data.requests_last_15);
+                    $('#lbl_requests_today').text(data.requests_today);
+
+                    if(data.requests_last_15 > 500)
+                    {
+                        $('#lbl_requests_last_15').addClass('label-warning');
+                    }
+                    else if (data.requests_last_15 > 599) {
+                        $('#lbl_requests_last_15').addClass('label-danger');
+                    }
+                    else
+                    {
+                        $('#lbl_requests_last_15').removeClass('label-danger').removeClass('label-warning');
+                    }
+                });
+            }, 2000);
+        }
+
+    );
+
+
+
+</script>
