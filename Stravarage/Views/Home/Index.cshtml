@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    var callbackUrl = System.Configuration.ConfigurationManager.AppSettings.Get("AuthCallbackUrl");
 }
 
 <style type="text/css">
@@ -10,7 +11,7 @@
 
 <div class="row">
     <div class="col-lg-12 text-center">
-        <a href="https://www.strava.com/oauth/authorize?client_id=3562&response_type=code&redirect_uri=http://localhost:52687/home/authenticate&scope=view_private,write&state=initial&approval_prompt=force">
+        <a href="https://www.strava.com/oauth/authorize?client_id=3562&response_type=code&redirect_uri=@callbackUrl/home/authenticate&scope=view_private,write&state=initial&approval_prompt=force">
             <img src="~/Images/ConnectWithStrava@2x.png" alt="Connect With Strava" />
         </a>
     </div>
