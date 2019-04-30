@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Net;
+using System.Net.Http;
 
 namespace Stravarage
 {
@@ -16,6 +18,8 @@ namespace Stravarage
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
     }
 }

@@ -46,6 +46,7 @@ namespace Stravarage.Models
                 {
                     try
                     {
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                         using (var wb = new WebClient())
                         {
                             var data = new NameValueCollection();

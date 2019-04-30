@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Helpers;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Stravarage.Models
 {
@@ -78,11 +79,12 @@ namespace Stravarage.Models
                         Task.WaitAll(tasks);
 
                         _leaderboard = _leaderboard.Where(s => s != null).ToList();
-                        _leaderboard = _leaderboard.GroupBy(x => x.AthleteId).Select(y => y.First()).ToList();
+                        _leaderboard = _leaderboard.GroupBy(x => x.AthleteName).Select(y => y.First()).ToList();
 
 
                         removeOutliers();
 
+        
                         CacheItemPolicy policy = new CacheItemPolicy();
                         policy.AbsoluteExpiration = DateTime.Now.AddDays(1);
 
@@ -141,9 +143,11 @@ namespace Stravarage.Models
         public DateTime Date { get; set; }
         public int TimeInSeconds { get; set; }
 
+        public string AthleteName { get; set; }
+
         public SegmentEffort(dynamic jsonObject)
         {
-            this.AthleteId = (int)jsonObject.athlete_id;
+            this.AthleteName = (string)jsonObject.athlete_name;
             this.Date = Convert.ToDateTime(jsonObject.start_date);
             this.TimeInSeconds = (int)jsonObject.elapsed_time;
         }

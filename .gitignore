@@ -6,3 +6,4 @@ Stravarage/Stravarage.csproj.user
 Stravarage/tmp/*.xlsx
 .vs/config/applicationhost.config
 .vs/Stravarage/v14/.suo
+.vs/*
