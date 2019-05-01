@@ -57,11 +57,18 @@ namespace Stravarage.Models
                                 try
                                 {
                                     var _api = StravaAPI.GetInstance(token);
-                                    var effortJson = api.GetLeaderboard(this.Id, ix+1, StravaAPI.MAX_RESULTS_PER_PAGE);
+                                    var effortJson = api.GetLeaderboard(this.Id, ix + 1, StravaAPI.MAX_RESULTS_PER_PAGE);
                                     foreach (dynamic s in effortJson.entries)
                                     {
-                                        SegmentEffort eff = new SegmentEffort(s);
-                                        _leaderboard.Add(eff);
+                                        double moving_time = (double)s.moving_time;
+                                        double elapsed_time = (double)s.elapsed_time;
+                                        double rest_time = elapsed_time - moving_time;
+
+                                        if (rest_time < 0.2 * elapsed_time)//don't count efforts with too much rest time in the middle
+                                        {
+                                            SegmentEffort eff = new SegmentEffort(s);
+                                            _leaderboard.Add(eff);
+                                        }
                                     }
                                 }
                                 catch (Exception ex)

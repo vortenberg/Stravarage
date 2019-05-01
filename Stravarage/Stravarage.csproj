@@ -187,6 +187,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\ConnectWithStrava%402x.png" />
+    <Content Include="Images\velcurve.png" />
     <Content Include="Images\waiting.gif" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
