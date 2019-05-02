@@ -1,6 +1,10 @@
 ﻿(function () {
     StatGraph = function (segment, segmentEfforts) {
         var efforts, minTime, maxTime, meanTime, modeTime, yourTime, standardDeviation;
+        var percentile90Time, percentile80Time, percentile70Time, percentile60Time, percentile50Time, percentile40Time, percentile30Time, percentile20Time, percentile10Time;
+
+
+
         yourTime = segment.athlete_segment_stats.pr_elapsed_time;
         efforts = segmentEfforts;
 
@@ -74,6 +78,27 @@
             var stdDev = Math.sqrt(chi / efforts.length);
 
             standardDeviation = stdDev;
+
+            var ix90 = Math.round(0.1 * efforts.length);
+            var ix80 = Math.round(0.2 * efforts.length);
+            var ix70 = Math.round(0.3 * efforts.length);
+            var ix60 = Math.round(0.4 * efforts.length);
+            var ix50 = Math.round(0.5 * efforts.length);
+            var ix40 = Math.round(0.6 * efforts.length);
+            var ix30 = Math.round(0.7 * efforts.length);
+            var ix20 = Math.round(0.8 * efforts.length);
+            var ix10 = Math.round(0.9 * efforts.length);
+
+            percentile90Time = efforts[ix90].TimeInSeconds;
+            percentile80Time = efforts[ix80].TimeInSeconds;
+            percentile70Time = efforts[ix70].TimeInSeconds;
+            percentile60Time = efforts[ix60].TimeInSeconds;
+            percentile50Time = efforts[ix50].TimeInSeconds;
+            percentile40Time = efforts[ix40].TimeInSeconds;
+            percentile30Time = efforts[ix30].TimeInSeconds;
+            percentile20Time = efforts[ix20].TimeInSeconds;
+            percentile10Time = efforts[ix10].TimeInSeconds;
+
         }
 
         function renderGraph() {
@@ -82,11 +107,21 @@
 
             renderHistogram();
 
-            for (var t = meanTime - standardDeviation * 4; t <= meanTime + standardDeviation * 4; t += standardDeviation) {
-                if (Math.abs(t - meanTime) < 1)
-                    continue;
-                renderTimeTickmark(t, height, "#000000", "", "#000000");
-            }
+            //for (var t = meanTime - standardDeviation * 4; t <= meanTime + standardDeviation * 4; t += standardDeviation) {
+            //    if (Math.abs(t - meanTime) < 1)
+            //        continue;
+            //    renderTimeTickmark(t, height, "#000000", "", "#000000");
+            //}
+
+            renderTimeTickmark(percentile10Time, height, "#000000", "10%", "#000000");
+            renderTimeTickmark(percentile20Time, height, "#000000", "20%", "#000000");
+            renderTimeTickmark(percentile30Time, height, "#000000", "30%", "#000000");
+            renderTimeTickmark(percentile40Time, height, "#000000", "40%", "#000000");
+            renderTimeTickmark(percentile50Time, height, "#000000", "50%", "#000000");
+            renderTimeTickmark(percentile60Time, height, "#000000", "60%", "#000000");
+            renderTimeTickmark(percentile70Time, height, "#000000", "70%", "#000000");
+            renderTimeTickmark(percentile80Time, height, "#000000", "80%", "#000000");
+            renderTimeTickmark(percentile90Time, height, "#000000", "90%", "#000000");
 
             renderTimeTickmark(yourTime, 80, "#00ff00", "You:");
             renderTimeTickmark(meanTime, height, "#ff0000", "Mean:");

@@ -25,6 +25,11 @@ namespace Stravarage.Controllers
             return View();
         }
 
+        public ActionResult ChartsTest()
+        {
+            return View();
+        }
+
         public ActionResult Authenticate()
         {
             if (Access.AuthenticateStravaAthlete())

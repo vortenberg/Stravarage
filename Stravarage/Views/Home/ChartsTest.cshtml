@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Drawtest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Charts.js Test</h2>
+
+<script type="text/javascript" src="~/Scripts/Plotly/plotly.min.js"></script>
+
+<div id="myDiv"></div>
+<script>
+    var x = [1,2,3,4,5];
+
+//for (var i = 0; i < 500; i ++) {
+//	x[i] = Math.random();
+//}
+
+var trace = {
+    x: x,
+    type: 'histogram',
+    };
+
+var data = [trace];
+    Plotly.newPlot('myDiv', data)
+
+</script>

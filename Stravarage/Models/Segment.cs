@@ -87,6 +87,7 @@ namespace Stravarage.Models
 
                         _leaderboard = _leaderboard.Where(s => s != null).ToList();
                         _leaderboard = _leaderboard.GroupBy(x => x.AthleteName).Select(y => y.First()).ToList();
+                        _leaderboard = _leaderboard.OrderBy(s => s.TimeInSeconds).ToList();
 
 
                         removeOutliers();
