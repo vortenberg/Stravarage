@@ -23,6 +23,10 @@
 <strong>Std. Dev:</strong>  <img src="~/Images/waiting.gif" id="waitingGifStdDev" class="invisible" /><span id="lblStdDev"></span><br />
 <strong>KOM:</strong>        <img src="~/Images/waiting.gif" id="waitingGifKOM" class="invisible" /><span id="lblKOM"></span><br />
 <strong># Efforts:</strong>  <img src="~/Images/waiting.gif" id="waitingGifNumEfforts" class="invisible" /><span id="lblNumEfforts"></span><br />
+<div>
+    <input type="radio" id="rdo_percentile" name="display_lines" checked /><label for="rdo_percentile">Percentile</label>
+    <input type="radio" id="rdo_std" name="display_lines"/><label for="rdo_std">Std. Dev.</label>
+</div>
 
 <canvas id="canvasPR" width="1200" height="500" style="border:1px dotted;"></canvas>
 
@@ -36,10 +40,14 @@
         function()
         {
             var proxy = new StravarageAPI()
+            var currentSegment, currentLeaderboard;
+
+            $('input[name="display_lines"]').change(function () {
+                var graph = new StatGraph(currentSegment, currentLeaderboard,$('#rdo_std').prop('checked'));
+            })
 
             $("#ddlStarredSegments").change(
-                function()
-                {
+                function () {
                     $("#lblAvgPR").html("");
                     $("#lblPR").html("");
                     $("#lblStdDev").html("");
@@ -53,22 +61,27 @@
                     var proxy = new StravarageAPI();
 
                     proxy.getSegment($("#ddlStarredSegments").val(),
-                                        function (segment) {
-                                            proxy.getLeaderboard($("#ddlStarredSegments").val(),
-                                                                    function (segmentEfforts) {
+                        function (segment) {
 
-                                                                        var graph = new StatGraph(segment, segmentEfforts);
+                            currentSegment = segment;
 
-                                                                        $("#waitingGifAvg, #waitingGifStdDev, #waitingGifKOM, #waitingGifPR, #waitingGifMode, #waitingGifNumEfforts").addClass("invisible");
-                                                                        $("#lblPR").html(graph.yourTime());
-                                                                        $("#lblAvgPR").html(graph.meanTime());
-                                                                        $("#lblStdDev").html(graph.standardDeviation());
-                                                                        $("#lblKOM").html(graph.minTime());
-                                                                        $("#lblModePR").html(graph.modeTime());
-                                                                        $("#lblNumEfforts").html(graph.numEfforts());
+                            proxy.getLeaderboard($("#ddlStarredSegments").val(),
+                                function (segmentEfforts) {
 
-                                                                    })
-                                        });
+                                    currentLeaderboard = segmentEfforts;
+
+                                    var graph = new StatGraph(segment, segmentEfforts,$('#rdo_std').prop('checked'));
+
+                                    $("#waitingGifAvg, #waitingGifStdDev, #waitingGifKOM, #waitingGifPR, #waitingGifMode, #waitingGifNumEfforts").addClass("invisible");
+                                    $("#lblPR").html(graph.yourTime());
+                                    $("#lblAvgPR").html(graph.meanTime());
+                                    $("#lblStdDev").html(graph.standardDeviation());
+                                    $("#lblKOM").html(graph.minTime());
+                                    $("#lblModePR").html(graph.modeTime());
+                                    $("#lblNumEfforts").html(graph.numEfforts());
+
+                                })
+                        });
 
                 }
             )
@@ -91,6 +104,8 @@
                     }
                 });
             }, 2000);
+
+
         }
 
     );

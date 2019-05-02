@@ -1,12 +1,13 @@
 ﻿(function () {
-    StatGraph = function (segment, segmentEfforts) {
-        var efforts, minTime, maxTime, meanTime, modeTime, yourTime, standardDeviation;
+    StatGraph = function (segment, segmentEfforts, draw_std_dev) {
+        var efforts, minTime, maxTime, meanTime, modeTime, yourTime, standardDeviation, showStdDev;
         var percentile90Time, percentile80Time, percentile70Time, percentile60Time, percentile50Time, percentile40Time, percentile30Time, percentile20Time, percentile10Time;
 
 
 
         yourTime = segment.athlete_segment_stats.pr_elapsed_time;
         efforts = segmentEfforts;
+        showStdDev = draw_std_dev;
 
         calculateVitalStats();
 
@@ -107,25 +108,32 @@
 
             renderHistogram();
 
-            //for (var t = meanTime - standardDeviation * 4; t <= meanTime + standardDeviation * 4; t += standardDeviation) {
-            //    if (Math.abs(t - meanTime) < 1)
-            //        continue;
-            //    renderTimeTickmark(t, height, "#000000", "", "#000000");
-            //}
+            if (showStdDev) {
+                for (var t = meanTime - standardDeviation * 4; t <= meanTime + standardDeviation * 4; t += standardDeviation) {
+                    if (Math.abs(t - meanTime) < 1)
+                        continue;
+                    renderTimeTickmark(t, height, "#000000", "", "#000000");
+                }
+            }
+            else {
+                renderTimeTickmark(percentile10Time, height, "#000000", "10%", "#000000");
+                renderTimeTickmark(percentile20Time, height, "#000000", "20%", "#000000");
+                renderTimeTickmark(percentile30Time, height, "#000000", "30%", "#000000");
+                renderTimeTickmark(percentile40Time, height, "#000000", "40%", "#000000");
+                renderTimeTickmark(percentile50Time, height, "#000000", "50%", "#000000");
+                renderTimeTickmark(percentile60Time, height, "#000000", "60%", "#000000");
+                renderTimeTickmark(percentile70Time, height, "#000000", "70%", "#000000");
+                renderTimeTickmark(percentile80Time, height, "#000000", "80%", "#000000");
+                renderTimeTickmark(percentile90Time, height, "#000000", "90%", "#000000");
+            }
 
-            renderTimeTickmark(percentile10Time, height, "#000000", "10%", "#000000");
-            renderTimeTickmark(percentile20Time, height, "#000000", "20%", "#000000");
-            renderTimeTickmark(percentile30Time, height, "#000000", "30%", "#000000");
-            renderTimeTickmark(percentile40Time, height, "#000000", "40%", "#000000");
-            renderTimeTickmark(percentile50Time, height, "#000000", "50%", "#000000");
-            renderTimeTickmark(percentile60Time, height, "#000000", "60%", "#000000");
-            renderTimeTickmark(percentile70Time, height, "#000000", "70%", "#000000");
-            renderTimeTickmark(percentile80Time, height, "#000000", "80%", "#000000");
-            renderTimeTickmark(percentile90Time, height, "#000000", "90%", "#000000");
-
-            renderTimeTickmark(yourTime, 80, "#00ff00", "You:");
-            renderTimeTickmark(meanTime, height, "#ff0000", "Mean:");
+            renderTimeTickmark(yourTime, 80, "#0000ff", "You:");
             renderTimeTickmark(minTime, 140, "#0000ff", "KOM:");
+
+            if (showStdDev)
+                renderTimeTickmark(meanTime, height, "#ff0000", "Mean:");
+
+
 
             $(".time-tooltip").remove();
             var tooltip = $('<div class="time-tooltip"></div>');
@@ -206,7 +214,8 @@
             context.lineTo(p, height/2 + tickHeight / 2);
             context.stroke();
             context.strokeStyle = labelColor;
-            context.strokeText(label + " " + secondsTimeSpanToHMS(time), p, (height - yOfBaseline + tickHeight / 2) - 1);
+            context.strokeText(secondsTimeSpanToHMS(time), p, (height - yOfBaseline + tickHeight / 2) - 1);
+            context.strokeText(label, p, (height - yOfBaseline + tickHeight / 2) - tickHeight + 10);
             context.closePath();
         }
 
