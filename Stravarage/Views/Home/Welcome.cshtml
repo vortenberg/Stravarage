@@ -4,18 +4,22 @@
     ViewBag.Title = "Welcome";
 }
 
-<div id="div_api_requests" class="pull-right">
-    Strava Api Requests: <span class="label label-default" id="lbl_requests_last_15"></span>&nbsp;<span class="label label-default" id="lbl_requests_today"></span>
-</div>
+@section header{
+    <div class="pull-left" style="color:white;font-size:2em">
+        Welcome @Html.DisplayFor(model => model.FirstName)!
+    </div>
+    <div id="div_api_requests" class="pull-right">
+        <span style="color:white">Strava Api Requests: </span><span class="label label-default" id="lbl_requests_last_15"></span>&nbsp;<span class="label label-default" id="lbl_requests_today"></span>
+    </div>
+}
 
-<h2>Welcome @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)!</h2>
-<strong>Id:</strong> @Html.DisplayFor(model => model.Id) <br />
+@*<strong>Id:</strong> @Html.DisplayFor(model => model.Id) <br />*@
 
 
 <strong>Starred Segments:</strong> @Html.DropDownListFor(model => model.StarredSegments,
-                                                            new SelectList(Model.StarredSegments, "Id", "Name"),
-                                                            " - select segment - ",
-                                                            new { id = "ddlStarredSegments" })
+                         new SelectList(Model.StarredSegments, "Id", "Name"),
+                         " - select segment - ",
+                         new { id = "ddlStarredSegments" })
 <br />
 <strong>Your PR:</strong>   <img src="~/Images/waiting.gif" id="waitingGifPR" class="invisible" /><span id="lblPR"></span><br />
 <strong>Mean PR:</strong>   <img src="~/Images/waiting.gif" id="waitingGifAvg" class="invisible" /><span id="lblAvgPR"></span><br />
@@ -25,7 +29,7 @@
 <strong># Efforts:</strong>  <img src="~/Images/waiting.gif" id="waitingGifNumEfforts" class="invisible" /><span id="lblNumEfforts"></span><br />
 <div>
     <input type="radio" id="rdo_percentile" name="display_lines" checked /><label for="rdo_percentile">Percentile</label>
-    <input type="radio" id="rdo_std" name="display_lines"/><label for="rdo_std">Std. Dev.</label>
+    <input type="radio" id="rdo_std" name="display_lines" /><label for="rdo_std">Std. Dev.</label>
 </div>
 
 <canvas id="canvasPR" width="1200" height="500" style="border:1px dotted;"></canvas>
@@ -37,13 +41,12 @@
 
     $(document).ready(
 
-        function()
-        {
+        function () {
             var proxy = new StravarageAPI()
             var currentSegment, currentLeaderboard;
 
             $('input[name="display_lines"]').change(function () {
-                var graph = new StatGraph(currentSegment, currentLeaderboard,$('#rdo_std').prop('checked'));
+                var graph = new StatGraph(currentSegment, currentLeaderboard, $('#rdo_std').prop('checked'));
             })
 
             $("#ddlStarredSegments").change(
@@ -70,7 +73,7 @@
 
                                     currentLeaderboard = segmentEfforts;
 
-                                    var graph = new StatGraph(segment, segmentEfforts,$('#rdo_std').prop('checked'));
+                                    var graph = new StatGraph(segment, segmentEfforts, $('#rdo_std').prop('checked'));
 
                                     $("#waitingGifAvg, #waitingGifStdDev, #waitingGifKOM, #waitingGifPR, #waitingGifMode, #waitingGifNumEfforts").addClass("invisible");
                                     $("#lblPR").html(graph.yourTime());
@@ -91,15 +94,13 @@
                     $('#lbl_requests_last_15').text(data.requests_last_15);
                     $('#lbl_requests_today').text(data.requests_today);
 
-                    if(data.requests_last_15 > 500)
-                    {
+                    if (data.requests_last_15 > 500) {
                         $('#lbl_requests_last_15').addClass('label-warning');
                     }
                     else if (data.requests_last_15 > 599) {
                         $('#lbl_requests_last_15').addClass('label-danger');
                     }
-                    else
-                    {
+                    else {
                         $('#lbl_requests_last_15').removeClass('label-danger').removeClass('label-warning');
                     }
                 });
