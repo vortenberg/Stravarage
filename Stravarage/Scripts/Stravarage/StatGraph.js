@@ -173,10 +173,17 @@
             var prevTime = minTime;
 
             for (var k = 0; k < efforts.length; k++) {
-                if (efforts[k].TimeInSeconds >= prevTime + incrementSeconds) {
-                    ix++;
-                    prevTime += incrementSeconds;
-                }
+                //if (efforts[k].TimeInSeconds >= prevTime + incrementSeconds) {
+                //    ix++;
+                //    prevTime += incrementSeconds;
+                //}
+                var currentTime = efforts[k].TimeInSeconds;
+                var t_diff = currentTime - minTime;
+                var incWhole = Math.round(incrementSeconds);
+               // var mod = t_diff % incWhole;
+                ix = Math.floor(t_diff / incWhole);
+                
+
                 histogram[ix]++;
             }
 
