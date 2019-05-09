@@ -7,6 +7,9 @@
 
         yourTime = segment.athlete_segment_stats.pr_elapsed_time;
         efforts = segmentEfforts;
+
+
+
         showStdDev = draw_std_dev;
 
         calculateVitalStats();

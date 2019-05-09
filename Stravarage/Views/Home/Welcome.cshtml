@@ -75,15 +75,21 @@ new { id = "ddlStarredSegments" })
 
                                     currentLeaderboard = segmentEfforts;
 
-                                    var graph = new StatGraph(segment, segmentEfforts, $('#rdo_std').prop('checked'));
+                                    if (segmentEfforts.length > 2) {
+                                        var graph = new StatGraph(segment, segmentEfforts, $('#rdo_std').prop('checked'));
+
+                                        $("#lblPR").html(graph.yourTime());
+                                        $("#lblAvgPR").html(graph.meanTime());
+                                        $("#lblStdDev").html(graph.standardDeviation());
+                                        $("#lblKOM").html(graph.minTime());
+                                        $("#lblModePR").html(graph.modeTime());
+                                        $("#lblNumEfforts").html(graph.numEfforts());
+                                    }
+                                    else {
+                                        alert('Minimum of 2 PRs required');
+                                    }
 
                                     $("#waitingGifAvg, #waitingGifStdDev, #waitingGifKOM, #waitingGifPR, #waitingGifMode, #waitingGifNumEfforts").addClass("invisible");
-                                    $("#lblPR").html(graph.yourTime());
-                                    $("#lblAvgPR").html(graph.meanTime());
-                                    $("#lblStdDev").html(graph.standardDeviation());
-                                    $("#lblKOM").html(graph.minTime());
-                                    $("#lblModePR").html(graph.modeTime());
-                                    $("#lblNumEfforts").html(graph.numEfforts());
 
                                 })
                         });
